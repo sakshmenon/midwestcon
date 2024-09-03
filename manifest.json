@@ -1,0 +1,21 @@
+{
+  "manifest_version": 3,
+  "name": "Google Search Tab Processor",
+  "version": "1.0",
+  "permissions": [
+    "tabs",
+    "activeTab",
+    "scripting",
+    "storage"
+  ],
+  "host_permissions": [
+    "https://sakshmenon.github.io/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Process Tab Title"
+  }
+}
