@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "Google Search Tab Processor",
+  "name": "Querify",
   "version": "1.0",
   "permissions": [
     "tabs",
@@ -9,13 +9,15 @@
     "storage"
   ],
   "host_permissions": [
-    "https://sakshmenon.github.io/*"
+    "http://127.0.0.1:5500/*",
+    "https://www.google.com/search*"
   ],
   "background": {
     "service_worker": "background.js"
   },
   "action": {
     "default_popup": "popup.html",
-    "default_title": "Process Tab Title"
+    "default_title": "Search Query Optimizer",
+    "default_icon" : "icon.png"
   }
 }

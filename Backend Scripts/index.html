@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text Processor</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        #output { margin-top: 10px; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h1>Text Processor</h1>
+    <input type="text" id="input-text" placeholder="Enter your text here">
+    <button id="process-text">Process Text</button>
+    <div id="output">Output will appear here</div>
+
+    <script>
+        // Function to call ChatGPT API
+        async function callChatGPT(prompt) {
+            const apiKey = 'api_key'; // Replace with your OpenAI API key
+            const apiUrl = 'https://api.openai.com/v1/chat/completions';
+
+            const response = await fetch(apiUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${apiKey}`,
+                },
+                body: JSON.stringify({
+                    model: "gpt-4o-mini", // Specify the model
+                    messages: [{ role: "system", content: "Your context here" }, { role: "user", content: prompt }],
+                    max_tokens: 150
+                })
+            });
+
+            const data = await response.json();
+            return data.choices[0].message.content.trim();
+        }
+
+        document.getElementById('process-text').addEventListener('click', async function() {
+            const inputText = document.getElementById('input-text').value;
+
+            if (inputText) {
+                // Call ChatGPT with the input text and context
+                const context = "make the following queries open ended";
+                const prompt = `${context}\n\nInput: ${inputText}`;
+
+                // Get the response from ChatGPT
+                const outputText = await callChatGPT(prompt);
+
+                // Display the output in the designated div
+                document.getElementById('output').textContent = outputText;
+
+                // Launch a Google search with the processed output on the same tab
+                const searchQuery = encodeURIComponent(outputText);
+                const googleSearchUrl = `https://www.google.com/search?q=${searchQuery}`;
+
+                // Redirect to the Google search URL
+                window.location.href = googleSearchUrl;
+            }
+        });
+
+        // Extract text parameter from URL if present
+        const urlParams = new URLSearchParams(window.location.search);
+        const inputText = urlParams.get('text');
+
+        if (inputText) {
+            // Automatically process the text if provided via URL
+            document.getElementById('input-text').value = inputText;
+
+            // Trigger the processing
+            document.getElementById('process-text').click();
+        }
+    </script>
+    
+</body>
+</html>

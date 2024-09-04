@@ -11,22 +11,22 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
                 if (results && results[0]) {
                     let tabTitle = results[0].result;
 
-                    // Create the URL with the title as a query parameter
-                    const targetUrl = `https://sakshmenon.github.io/extension-main/?text=${encodeURIComponent(tabTitle)}`;
+                    // Create the URL with the title as a query parameter, targeting the local server
+                    const targetUrl = `http://127.0.0.1:5500/?text=${encodeURIComponent(tabTitle)}`;
 
                     // Open the URL in a new tab without focusing it
-                    chrome.tabs.create({ url: targetUrl, active: false }, (newTab) => {
+                    // chrome.tabs.create({ url: targetUrl, active: false }, (newTab) => {
                         // Process the output (if needed) or store it for later use
-                        chrome.scripting.executeScript({
-                            target: { tabId: newTab.id },
-                            function: () => document.getElementById('output').textContent
-                        }, (newResults) => {
-                            if (newResults && newResults[0]) {
-                                // Log or store the output as needed
-                                console.log(`Processed Title: ${newResults[0].result}`);
+                    chrome.scripting.executeScript({
+                        target: { tabId: newTab.id },
+                        function: () => document.getElementById('output').textContent
+                    }, (newResults) => {
+                        if (newResults && newResults[0]) {
+                            // Send the processed title back to the popup
+                            chrome.runtime.sendMessage({ processedTitle: newResults[0].result });
                             }
                         });
-                    });
+                    // });
                 }
             });
         }
